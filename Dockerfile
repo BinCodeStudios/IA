@@ -8,12 +8,14 @@ WORKDIR /app
 COPY requirements.txt .
 COPY app.py .
 
-# Instala dependencias y limpia caché
-RUN pip install --no-cache-dir -r requirements.txt && \
-    apt-get update && \
+# Instala dependencias del sistema
+RUN apt-get update && \
     apt-get install -y --no-install-recommends gcc && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
+
+# Instala dependencias de Python
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Expone el puerto
 EXPOSE 8000
