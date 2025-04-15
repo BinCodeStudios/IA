@@ -1,8 +1,18 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import requests
 
 app = FastAPI()
+
+# Configurar CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Permitir todos los orígenes para pruebas; restringe en producción
+    allow_credentials=True,
+    allow_methods=["GET", "PUT", "POST", "OPTIONS"],
+    allow_headers=["*"],
+)
 
 # Modelo para validar el cuerpo de las peticiones PUT
 class PromptRequest(BaseModel):
@@ -12,33 +22,29 @@ class PromptRequest(BaseModel):
 # Endpoint GET para verificar el estado
 @app.get("/status")
 async def get_status():
-    return {"status": "API running", "model": "Gemma 3"}
+    return {"status": "API running", "model": "Mock IA"}
 
-# Endpoint GET para generar texto
+# Endpoint GET para generar texto (mock)
 @app.get("/generate/{prompt}")
 async def get_generate(prompt: str):
     try:
-        # Placeholder para el modelo (ajustaremos en Render)
-        model_url = "http://localhost:8000/v1/completions"  # Cambiará según el modelo
-        payload = {"prompt": prompt, "max_tokens": 100}
-        response = requests.post(model_url, json=payload)
-        if response.status_code == 200:
-            return response.json()
-        else:
-            raise HTTPException(status_code=500, detail="Error al contactar el modelo")
+        # Simulamos una respuesta porque no hay modelo real
+        mock_response = {
+            "choices": [{"text": f"Respuesta simulada para: {prompt}"}]
+        }
+        return mock_response
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-# Endpoint PUT para enviar un prompt
+# Endpoint PUT para enviar un prompt (mock)
 @app.put("/generate")
 async def put_generate(request: PromptRequest):
     try:
-        model_url = "http://localhost:8000/v1/completions"
-        payload = {"prompt": request.prompt, "max_tokens": request.max_tokens}
-        response = requests.post(model_url, json=payload)
-        if response.status_code == 200:
-            return response.json()
-        else:
-            raise HTTPException(status_code=500, detail="Error al contactar el modelo")
+        # Simulamos una respuesta
+        mock_response = {
+            "choices": [{"text": f"Respuesta simulada para: {request.prompt}"}],
+            "max_tokens": request.max_tokens
+        }
+        return mock_response
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
