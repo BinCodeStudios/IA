@@ -2,7 +2,6 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from transformers import pipeline
-import torch
 
 app = FastAPI()
 
@@ -15,7 +14,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Cargar el modelo DistilBERT para generación de texto
+# Cargar el modelo DistilGPT2 para generación de texto
 try:
     generator = pipeline("text-generation", model="distilgpt2", device=-1)  # device=-1 para CPU
 except Exception as e:
