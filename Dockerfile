@@ -10,11 +10,14 @@ COPY app.py .
 
 # Instala dependencias del sistema
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends gcc && \
+    apt-get install -y --no-install-recommends gcc libc6-dev && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Instala dependencias de Python
+# Instala torch desde la fuente oficial de PyTorch (CPU)
+RUN pip install --no-cache-dir torch==2.0.1 --index-url https://download.pytorch.org/whl/cpu
+
+# Instala las demás dependencias
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Expone el puerto
