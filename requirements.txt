@@ -3,4 +3,5 @@ uvicorn==0.20.0
 pydantic==1.10.12
 requests==2.28.1
 transformers==4.31.0
-torch==2.0.1
+torch==2.0.1+cpu
+numpy==1.26.4
